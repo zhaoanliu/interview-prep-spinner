@@ -1,0 +1,1138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Daily Interview Prep Spinner</title>
+    <meta name="color-scheme" content="dark" />
+    <style>
+      :root {
+        --bg: #0b0f18;
+        --panel: rgba(255, 255, 255, 0.06);
+        --panel-2: rgba(255, 255, 255, 0.09);
+        --border: rgba(255, 255, 255, 0.10);
+        --text: rgba(255, 255, 255, 0.92);
+        --muted: rgba(255, 255, 255, 0.62);
+        --shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+        --radius: 18px;
+        --ring: 0 0 0 4px rgba(138, 180, 255, 0.18);
+
+        --accent: #7c5cff;
+        --accent2: #24d4ff;
+        --good: #2ae98a;
+      }
+
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+          "Apple Color Emoji", "Segoe UI Emoji";
+        color: var(--text);
+        background:
+          radial-gradient(1200px 800px at 20% -10%, rgba(124, 92, 255, 0.24), transparent 55%),
+          radial-gradient(1000px 700px at 90% 15%, rgba(36, 212, 255, 0.18), transparent 50%),
+          radial-gradient(900px 700px at 40% 110%, rgba(42, 233, 138, 0.10), transparent 55%),
+          linear-gradient(180deg, #070a12 0%, #0b0f18 55%, #070a12 100%);
+        overflow-x: hidden;
+      }
+
+      .wrap {
+        max-width: 1100px;
+        padding: 34px 18px 54px;
+        margin: 0 auto;
+      }
+
+      header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 14px 2px 24px;
+      }
+
+      .title {
+        display: grid;
+        gap: 6px;
+      }
+      .title h1 {
+        margin: 0;
+        font-size: clamp(22px, 3.2vw, 34px);
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+      }
+      .title p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 13px;
+        user-select: none;
+      }
+      .dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 999px;
+        background: radial-gradient(circle at 30% 30%, #fff, rgba(255, 255, 255, 0.25));
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 16px;
+      }
+
+      .card {
+        grid-column: span 12;
+        position: relative;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.04));
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        padding: 16px;
+      }
+
+      @media (min-width: 900px) {
+        .card { grid-column: span 4; }
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        background:
+          radial-gradient(600px 200px at 20% 0%, rgba(124, 92, 255, 0.18), transparent 60%),
+          radial-gradient(600px 200px at 80% 0%, rgba(36, 212, 255, 0.14), transparent 60%);
+        opacity: 0.65;
+        pointer-events: none;
+      }
+
+      .card-inner {
+        position: relative;
+        display: grid;
+        gap: 14px;
+      }
+
+      .card-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .label {
+        display: grid;
+        gap: 3px;
+        min-width: 0;
+      }
+      .label .kicker {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: rgba(255, 255, 255, 0.55);
+      }
+      .label .name {
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .spin {
+        appearance: none;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.06));
+        color: rgba(255, 255, 255, 0.92);
+        padding: 10px 12px;
+        border-radius: 12px;
+        font-weight: 650;
+        letter-spacing: -0.01em;
+        cursor: pointer;
+        transition: transform 120ms ease, border-color 120ms ease, background 160ms ease;
+        user-select: none;
+      }
+      .spin:hover { transform: translateY(-1px); border-color: rgba(255, 255, 255, 0.26); }
+      .spin:active { transform: translateY(0); }
+      .spin:focus-visible { outline: none; box-shadow: var(--ring); }
+      .spin[disabled] { opacity: 0.55; cursor: not-allowed; transform: none; }
+
+      .pill {
+        display: inline-flex;
+        gap: 6px;
+        align-items: center;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.68);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(0, 0, 0, 0.18);
+        padding: 7px 10px;
+        border-radius: 999px;
+        user-select: none;
+      }
+      .pill b { color: rgba(255, 255, 255, 0.86); font-weight: 700; }
+
+      .window {
+        position: relative;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.30), rgba(0, 0, 0, 0.12));
+        overflow: hidden;
+        min-height: 156px;
+        display: grid;
+        place-items: center;
+        padding: 18px 14px;
+      }
+
+      .window::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(200px 80px at 50% 15%, rgba(255, 255, 255, 0.08), transparent 70%),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 42%, rgba(0, 0, 0, 0.18));
+        pointer-events: none;
+        opacity: 0.8;
+      }
+
+      .pick {
+        position: relative;
+        z-index: 1;
+        font-size: clamp(22px, 2.4vw, 28px);
+        line-height: 1.15;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        text-align: center;
+        padding: 8px 6px;
+        text-wrap: balance;
+      }
+
+      .sub {
+        position: relative;
+        z-index: 1;
+        margin-top: 10px;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.62);
+        text-align: center;
+      }
+
+      .wheel-wrap {
+        position: relative;
+        z-index: 1;
+        width: min(292px, 92%);
+        aspect-ratio: 1 / 1;
+        margin: 2px auto 2px;
+      }
+
+      .wheel-canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+        border-radius: 999px;
+        background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.18) 60%);
+        box-shadow:
+          0 22px 60px rgba(0, 0, 0, 0.55),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.10);
+      }
+
+      .pointer {
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 12px solid transparent;
+        border-right: 12px solid transparent;
+        border-bottom: 18px solid rgba(255, 255, 255, 0.92);
+        filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.45));
+      }
+
+      .hub {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 38px;
+        height: 38px;
+        border-radius: 999px;
+        background:
+          radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.10)),
+          linear-gradient(180deg, rgba(0, 0, 0, 0.10), rgba(0, 0, 0, 0.28));
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        box-shadow:
+          0 12px 26px rgba(0, 0, 0, 0.55),
+          inset 0 0 0 4px rgba(0, 0, 0, 0.20);
+      }
+
+      .slot {
+        position: relative;
+        z-index: 1;
+        width: min(520px, 94%);
+        margin: 2px auto 0;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(0, 0, 0, 0.18);
+        overflow: hidden;
+        box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+      }
+
+      .slot::before,
+      .slot::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 44px;
+        pointer-events: none;
+        z-index: 2;
+      }
+      .slot::before {
+        top: 0;
+        background: linear-gradient(180deg, rgba(6, 9, 16, 0.95), rgba(6, 9, 16, 0));
+      }
+      .slot::after {
+        bottom: 0;
+        background: linear-gradient(0deg, rgba(6, 9, 16, 0.95), rgba(6, 9, 16, 0));
+      }
+
+      .slot-viewport {
+        position: relative;
+        height: 156px; /* shows 3 rows comfortably */
+        overflow: hidden;
+      }
+
+      .slot-center {
+        position: absolute;
+        left: 10px;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 52px;
+        border-radius: 14px;
+        background: linear-gradient(180deg, rgba(124, 92, 255, 0.22), rgba(36, 212, 255, 0.12));
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        box-shadow: 0 16px 30px rgba(0, 0, 0, 0.35);
+        z-index: 3;
+        pointer-events: none;
+      }
+
+      .slot-reel {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        will-change: transform, filter;
+        z-index: 2;
+      }
+
+      .slot.spinning .slot-reel {
+        filter: blur(2.2px);
+      }
+
+      .slot-row {
+        height: 52px;
+        display: grid;
+        place-items: center;
+        padding: 0 14px;
+        color: rgba(255, 255, 255, 0.80);
+        font-weight: 750;
+        letter-spacing: -0.02em;
+        font-size: 18px;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        user-select: none;
+      }
+
+      .slot-row small {
+        font-weight: 800;
+        color: rgba(255, 255, 255, 0.92);
+      }
+
+      .legend {
+        position: relative;
+        z-index: 1;
+        width: min(520px, 92%);
+        margin: 8px auto 0;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(0, 0, 0, 0.18);
+        overflow: hidden;
+      }
+
+      .legend-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 10px 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+        color: rgba(255, 255, 255, 0.70);
+        font-size: 12px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        user-select: none;
+      }
+
+      .legend-list {
+        max-height: 132px;
+        overflow: auto;
+        padding: 8px;
+        display: grid;
+        gap: 6px;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        background: rgba(255, 255, 255, 0.04);
+        color: rgba(255, 255, 255, 0.78);
+        font-size: 13px;
+        font-weight: 650;
+        letter-spacing: -0.01em;
+      }
+
+      .legend-num {
+        width: 24px;
+        height: 24px;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: rgba(255, 255, 255, 0.86);
+        font-weight: 800;
+        font-size: 12px;
+        flex: 0 0 auto;
+      }
+
+      .legend-swatch {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.20);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        flex: 0 0 auto;
+      }
+
+      .legend-item.active {
+        color: rgba(255, 255, 255, 0.96);
+        border-color: rgba(255, 255, 255, 0.20);
+        background: linear-gradient(180deg, rgba(124, 92, 255, 0.22), rgba(36, 212, 255, 0.12));
+        box-shadow: 0 14px 26px rgba(0, 0, 0, 0.35);
+      }
+
+      .legend-item.active .legend-swatch {
+        background: rgba(255, 255, 255, 0.85);
+      }
+
+      .legend-list::-webkit-scrollbar { height: 10px; width: 10px; }
+      .legend-list::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.14);
+        border-radius: 999px;
+      }
+
+      .footer {
+        margin-top: 18px;
+        color: rgba(255, 255, 255, 0.58);
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        padding: 0 2px;
+      }
+
+      .kbd {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+          monospace;
+        font-size: 11px;
+        padding: 2px 6px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: rgba(255, 255, 255, 0.72);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .spin { transition: none !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="title">
+          <h1>Daily Interview Prep Spinner</h1>
+          <p>Three quick spins. One focused plan for today.</p>
+        </div>
+        <div class="badge" id="todayBadge" title="Local time">
+          <span class="dot" aria-hidden="true"></span>
+          <span id="todayText">Loading…</span>
+        </div>
+      </header>
+
+      <main class="grid" aria-label="Interview prep spinners">
+        <section class="card" data-spinner="leetcode">
+          <div class="card-inner">
+            <div class="card-top">
+              <div class="label">
+                <div class="kicker">LeetCode</div>
+                <div class="name">Category</div>
+              </div>
+              <button class="spin" type="button" data-action="spin" aria-label="Spin LeetCode category">
+                Spin
+              </button>
+            </div>
+
+            <div class="pill" aria-hidden="true">
+              Picks from <b>15</b> categories
+            </div>
+
+            <div class="window">
+              <div class="slot" data-role="slot" aria-hidden="true">
+                <div class="slot-viewport">
+                  <div class="slot-center"></div>
+                  <div class="slot-reel" data-role="slotReel"></div>
+                </div>
+              </div>
+              <div class="pick" data-role="pick">—</div>
+              <div class="sub" data-role="sub">Hit Spin to scroll fast and land.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" data-spinner="system">
+          <div class="card-inner">
+            <div class="card-top">
+              <div class="label">
+                <div class="kicker">System Design</div>
+                <div class="name">Topic</div>
+              </div>
+              <button class="spin" type="button" data-action="spin" aria-label="Spin system design topic">
+                Spin
+              </button>
+            </div>
+
+            <div class="pill" aria-hidden="true">
+              Picks from <b>10</b> topics
+            </div>
+
+            <div class="window">
+              <div class="slot" data-role="slot" aria-hidden="true">
+                <div class="slot-viewport">
+                  <div class="slot-center"></div>
+                  <div class="slot-reel" data-role="slotReel"></div>
+                </div>
+              </div>
+              <div class="pick" data-role="pick">—</div>
+              <div class="sub" data-role="sub">Slot-machine style scroll + blur animation.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card" data-spinner="behavioral">
+          <div class="card-inner">
+            <div class="card-top">
+              <div class="label">
+                <div class="kicker">Behavioral</div>
+                <div class="name">Question</div>
+              </div>
+              <button class="spin" type="button" data-action="spin" aria-label="Spin behavioral question">
+                Spin
+              </button>
+            </div>
+
+            <div class="pill" aria-hidden="true">
+              Picks from <b>6</b> prompts
+            </div>
+
+            <div class="window">
+              <div class="wheel-wrap" aria-hidden="true">
+                <div class="pointer"></div>
+                <canvas class="wheel-canvas" data-role="wheel" width="320" height="320"></canvas>
+                <div class="hub"></div>
+              </div>
+              <div class="pick" data-role="pick">—</div>
+              <div class="sub" data-role="sub">Aim for a 2-minute STAR answer.</div>
+              <div class="legend" aria-label="Behavioral question legend">
+                <div class="legend-head"><span>Legend</span><span data-role="legendCount"></span></div>
+                <div class="legend-list" data-role="legend"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <div class="footer">
+        <div>
+          Tip: press <span class="kbd">1</span> / <span class="kbd">2</span> / <span class="kbd">3</span> to spin each card.
+        </div>
+        <div>
+          Press <span class="kbd">A</span> to spin all.
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (() => {
+        const DATA = {
+          leetcode: [
+            "Arrays",
+            "Strings",
+            "Sliding Window",
+            "Two Pointers",
+            "Stack",
+            "Binary Search",
+            "Linked List",
+            "Trees",
+            "Tries",
+            "Heap/Priority Queue",
+            "Backtracking",
+            "Graphs",
+            "Dynamic Programming",
+            "Greedy",
+            "Intervals",
+          ],
+          system: [
+            "URL Shortener",
+            "Rate Limiter",
+            "Distributed Cache",
+            "Notification System",
+            "News Feed",
+            "Search Autocomplete",
+            "Distributed Message Queue",
+            "Object Storage",
+            "Video Streaming",
+            "Payment System",
+          ],
+          behavioral: [
+            "Tell me about a conflict with a teammate",
+            "Describe a project you led end to end",
+            "Tell me about a time you failed",
+            "Describe influencing without authority",
+            "Tell me about a technically complex problem you solved",
+            "Describe a time you pushed back on a bad decision",
+          ],
+        };
+
+        const prefersReducedMotion =
+          window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        const fmtDate = (d) => {
+          try {
+            return new Intl.DateTimeFormat(undefined, {
+              weekday: "short",
+              month: "short",
+              day: "2-digit",
+            }).format(d);
+          } catch {
+            return d.toDateString();
+          }
+        };
+
+        const todayText = document.getElementById("todayText");
+        if (todayText) todayText.textContent = `Today: ${fmtDate(new Date())}`;
+
+        const randInt = (n) => Math.floor(Math.random() * n);
+        const pickRandom = (arr) => arr[randInt(arr.length)];
+
+        function setPick(sectionEl, value) {
+          const pickEl = sectionEl.querySelector('[data-role="pick"]');
+          if (pickEl) pickEl.textContent = value;
+        }
+
+        function setSub(sectionEl, text) {
+          const subEl = sectionEl.querySelector('[data-role="sub"]');
+          if (subEl) subEl.textContent = text;
+        }
+
+        function setBusy(sectionEl, isBusy) {
+          const btn = sectionEl.querySelector('button[data-action="spin"]');
+          if (btn) btn.disabled = isBusy;
+        }
+
+        const TAU = Math.PI * 2;
+        const POINTER_ANGLE = -Math.PI / 2; // points "up"
+        const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+        const mod = (x, m) => ((x % m) + m) % m;
+
+        function easeOutCubic(t) {
+          return 1 - Math.pow(1 - t, 3);
+        }
+
+        function wheelColors(n) {
+          const out = [];
+          for (let i = 0; i < n; i++) {
+            const hue = (265 + (i * 360) / n) % 360; // purple/blue leaning
+            out.push(`hsla(${hue} 92% 62% / 0.28)`);
+          }
+          return out;
+        }
+
+        function renderLegend(sectionEl, items, activeIdx) {
+          const host = sectionEl.querySelector('[data-role="legend"]');
+          const countEl = sectionEl.querySelector('[data-role="legendCount"]');
+          if (countEl) countEl.textContent = `${items.length} items`;
+          if (!host) return;
+
+          const colors = wheelColors(items.length);
+          host.innerHTML = "";
+          for (let i = 0; i < items.length; i++) {
+            const row = document.createElement("div");
+            row.className = "legend-item" + (i === activeIdx ? " active" : "");
+            row.setAttribute("data-idx", String(i));
+
+            const num = document.createElement("span");
+            num.className = "legend-num";
+            num.textContent = String(i + 1);
+
+            const sw = document.createElement("span");
+            sw.className = "legend-swatch";
+            sw.style.background = colors[i].replace("/ 0.28", "/ 0.55");
+
+            const txt = document.createElement("span");
+            txt.textContent = items[i];
+
+            row.appendChild(num);
+            row.appendChild(sw);
+            row.appendChild(txt);
+            host.appendChild(row);
+          }
+        }
+
+        function setLegendActive(sectionEl, idx) {
+          const host = sectionEl.querySelector('[data-role="legend"]');
+          if (!host) return;
+          const prev = host.querySelector(".legend-item.active");
+          if (prev) prev.classList.remove("active");
+          const next = host.querySelector(`.legend-item[data-idx="${idx}"]`);
+          if (next) {
+            next.classList.add("active");
+            next.scrollIntoView({ block: "nearest" });
+          }
+        }
+
+        function fitCanvasToDisplay(canvas) {
+          const dpr = window.devicePixelRatio || 1;
+          const rect = canvas.getBoundingClientRect();
+          const size = Math.max(1, Math.floor(Math.min(rect.width, rect.height) * dpr));
+          if (canvas.width !== size || canvas.height !== size) {
+            canvas.width = size;
+            canvas.height = size;
+          }
+          return { size, dpr };
+        }
+
+        function drawWheel(canvas, items, angleRad) {
+          const ctx = canvas.getContext("2d");
+          if (!ctx) return;
+          const { size } = fitCanvasToDisplay(canvas);
+          const n = items.length;
+          const cx = size / 2;
+          const cy = size / 2;
+          const r = size * 0.47;
+          const seg = TAU / n;
+          const colors = wheelColors(n);
+
+          ctx.clearRect(0, 0, size, size);
+          ctx.imageSmoothingEnabled = true;
+
+          // soft outer rim
+          ctx.beginPath();
+          ctx.arc(cx, cy, r + 6, 0, TAU);
+          ctx.fillStyle = "rgba(255,255,255,0.05)";
+          ctx.fill();
+
+          ctx.save();
+          ctx.translate(cx, cy);
+          ctx.rotate(angleRad);
+
+          for (let i = 0; i < n; i++) {
+            const a0 = i * seg;
+            const a1 = a0 + seg;
+
+            // slice
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.arc(0, 0, r, a0, a1);
+            ctx.closePath();
+            ctx.fillStyle = colors[i];
+            ctx.fill();
+
+            ctx.strokeStyle = "rgba(255,255,255,0.12)";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // big number label (readable while spinning)
+            const mid = (a0 + a1) / 2;
+            ctx.save();
+            ctx.rotate(mid);
+            ctx.translate(r * 0.68, 0);
+            ctx.rotate(Math.PI / 2);
+
+            const numText = String(i + 1);
+            const fontPx = clamp(Math.floor(size * (n >= 14 ? 0.090 : 0.098)), 16, 26);
+            ctx.font = `900 ${fontPx}px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.lineJoin = "round";
+            ctx.shadowColor = "rgba(0,0,0,0.55)";
+            ctx.shadowBlur = 14;
+            ctx.shadowOffsetY = 3;
+            ctx.lineWidth = Math.max(5, Math.floor(fontPx * 0.22));
+            ctx.strokeStyle = "rgba(0,0,0,0.78)";
+            ctx.fillStyle = "rgba(255,255,255,0.96)";
+            ctx.strokeText(numText, 0, 0);
+            ctx.fillText(numText, 0, 0);
+            ctx.restore();
+          }
+
+          ctx.restore();
+
+          // inner ring
+          ctx.beginPath();
+          ctx.arc(cx, cy, r * 0.60, 0, TAU);
+          ctx.strokeStyle = "rgba(0,0,0,0.25)";
+          ctx.lineWidth = 10;
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(cx, cy, r * 0.60, 0, TAU);
+          ctx.strokeStyle = "rgba(255,255,255,0.08)";
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+
+        function indexAtPointer(angleRad, n) {
+          const seg = TAU / n;
+          const rel = mod(POINTER_ANGLE - angleRad, TAU); // angle from wheel start to pointer
+          return clamp(Math.floor(rel / seg), 0, n - 1);
+        }
+
+        function angleForIndexAtPointer(idx, n) {
+          const seg = TAU / n;
+          return POINTER_ANGLE - (idx + 0.5) * seg;
+        }
+
+        const wheelState = new Map(); // sectionEl -> { angle, spinning, raf }
+
+        function initWheel(sectionEl, key) {
+          const items = DATA[key];
+          const canvas = sectionEl.querySelector('canvas[data-role="wheel"]');
+          if (!canvas) return;
+          const idx = randInt(items.length);
+          const angle = angleForIndexAtPointer(idx, items.length);
+          wheelState.set(sectionEl, { angle, spinning: false, raf: null });
+          drawWheel(canvas, items, angle);
+          setPick(sectionEl, items[idx]);
+          renderLegend(sectionEl, items, idx);
+        }
+
+        // --- Slot machine (for many items) ---
+        const slotState = new Map(); // sectionEl -> { index, offsetY, spinning, raf, rowH }
+
+        function buildSlotReel(sectionEl, items) {
+          const reel = sectionEl.querySelector('[data-role="slotReel"]');
+          if (!reel) return null;
+          reel.innerHTML = "";
+
+          // Repeat items to create a long reel so we never "run out" while spinning.
+          // (We also re-center before each spin, but this keeps things robust.)
+          const cycles = 60;
+          for (let c = 0; c < cycles; c++) {
+            for (let i = 0; i < items.length; i++) {
+              const row = document.createElement("div");
+              row.className = "slot-row";
+              row.textContent = items[i];
+              reel.appendChild(row);
+            }
+          }
+          return reel;
+        }
+
+        function getSlotRowHeight(sectionEl) {
+          const reel = sectionEl.querySelector('[data-role="slotReel"]');
+          const first = reel?.querySelector(".slot-row");
+          if (!first) return 52;
+          const rect = first.getBoundingClientRect();
+          return Math.max(44, Math.round(rect.height));
+        }
+
+        function setSlotTransform(sectionEl, y) {
+          const reel = sectionEl.querySelector('[data-role="slotReel"]');
+          if (!reel) return;
+          reel.style.transform = `translateY(${y}px)`;
+        }
+
+        function initSlot(sectionEl, key) {
+          const items = DATA[key];
+          if (!items) return;
+          buildSlotReel(sectionEl, items);
+          const rowH = getSlotRowHeight(sectionEl);
+          const idx = randInt(items.length);
+
+          // Center row should show idx initially.
+          // With a 3-row viewport, the center aligns at y = (viewport/2 - rowH/2) - (rowIndex*rowH)
+          const viewportH = sectionEl.querySelector(".slot-viewport")?.getBoundingClientRect().height || 156;
+          const centerY = viewportH / 2 - rowH / 2;
+          const startRowIndex = items.length * 20 + idx; // safely mid-reel
+          const y = centerY - startRowIndex * rowH;
+
+          slotState.set(sectionEl, { index: idx, offsetY: y, spinning: false, raf: null, rowH, startRowIndex });
+          setSlotTransform(sectionEl, y);
+          setPick(sectionEl, items[idx]);
+        }
+
+        function recenterSlot(sectionEl, key) {
+          const items = DATA[key];
+          if (!items) return;
+          const st = slotState.get(sectionEl);
+          if (!st) return;
+          const rowH = st.rowH || getSlotRowHeight(sectionEl);
+          const viewportH = sectionEl.querySelector(".slot-viewport")?.getBoundingClientRect().height || 156;
+          const centerY = viewportH / 2 - rowH / 2;
+          const startRowIndex = items.length * 20 + st.index;
+          const y = centerY - startRowIndex * rowH;
+          st.rowH = rowH;
+          st.startRowIndex = startRowIndex;
+          st.offsetY = y;
+          slotState.set(sectionEl, st);
+          setSlotTransform(sectionEl, y);
+        }
+
+        function spinSlot(sectionEl, key) {
+          const items = DATA[key];
+          if (!items || items.length < 2) return;
+          const slot = sectionEl.querySelector('[data-role="slot"]');
+          const reel = sectionEl.querySelector('[data-role="slotReel"]');
+          if (!slot || !reel) return;
+
+          const st = slotState.get(sectionEl) || { index: 0, offsetY: 0, spinning: false, raf: null, rowH: 52, startRowIndex: 0 };
+          if (st.spinning) return;
+
+          // Prevent running past the end of the finite reel: snap to the middle showing
+          // the current item before starting a new spin.
+          recenterSlot(sectionEl, key);
+          const st2 = slotState.get(sectionEl);
+          if (st2) {
+            st.index = st2.index;
+            st.offsetY = st2.offsetY;
+            st.rowH = st2.rowH;
+            st.startRowIndex = st2.startRowIndex;
+          }
+
+          let targetIdx = randInt(items.length);
+          if (targetIdx === st.index) targetIdx = (targetIdx + 1 + randInt(items.length - 1)) % items.length;
+
+          if (prefersReducedMotion) {
+            st.index = targetIdx;
+            slotState.set(sectionEl, st);
+            setPick(sectionEl, items[targetIdx]);
+            setSub(sectionEl, "Done.");
+            return;
+          }
+
+          setBusy(sectionEl, true);
+          setSub(sectionEl, "Spinning…");
+          slot.classList.add("spinning");
+
+          const rowH = st.rowH || getSlotRowHeight(sectionEl);
+          st.rowH = rowH;
+
+          const viewportH = sectionEl.querySelector(".slot-viewport")?.getBoundingClientRect().height || 156;
+          const centerY = viewportH / 2 - rowH / 2;
+
+          const startY = st.offsetY;
+          const startRowIndex = st.startRowIndex ?? (items.length * 6 + st.index);
+
+          // Spin forward several cycles, land on target
+          const extraCycles = 7 + randInt(4); // 7..10
+          const endRowIndex = startRowIndex + extraCycles * items.length + (targetIdx - st.index + items.length) % items.length;
+          const endY = centerY - endRowIndex * rowH;
+
+          const duration = 1100 + randInt(700); // 1.1s..1.8s
+          const t0 = performance.now();
+
+          st.spinning = true;
+          slotState.set(sectionEl, st);
+
+          const tick = (now) => {
+            const t = clamp((now - t0) / duration, 0, 1);
+            const eased = easeOutCubic(t);
+            const y = startY + (endY - startY) * eased;
+            st.offsetY = y;
+            setSlotTransform(sectionEl, y);
+            if (t < 1) {
+              st.raf = requestAnimationFrame(tick);
+              return;
+            }
+
+            st.spinning = false;
+            st.raf = null;
+            st.index = targetIdx;
+            st.startRowIndex = endRowIndex;
+            slotState.set(sectionEl, st);
+
+            slot.classList.remove("spinning");
+            setSlotTransform(sectionEl, endY);
+            setPick(sectionEl, items[targetIdx]);
+            setSub(sectionEl, "Locked in.");
+            setBusy(sectionEl, false);
+          };
+
+          st.raf = requestAnimationFrame(tick);
+        }
+
+        function spinWheel(sectionEl, key) {
+          const arr = DATA[key];
+          if (!arr || arr.length < 2) return;
+
+          const canvas = sectionEl.querySelector('canvas[data-role="wheel"]');
+          if (!canvas) return;
+
+          const st = wheelState.get(sectionEl) || { angle: 0, spinning: false, raf: null };
+          if (st.spinning) return;
+
+          const n = arr.length;
+          const currentIdx = indexAtPointer(st.angle, n);
+          let targetIdx = randInt(n);
+          if (targetIdx === currentIdx) targetIdx = (targetIdx + 1 + randInt(n - 1)) % n;
+
+          if (prefersReducedMotion) {
+            const angle = angleForIndexAtPointer(targetIdx, n);
+            st.angle = angle;
+            wheelState.set(sectionEl, st);
+            drawWheel(canvas, arr, angle);
+            setPick(sectionEl, arr[targetIdx]);
+            setSub(sectionEl, "Done.");
+            return;
+          }
+
+          setBusy(sectionEl, true);
+          setSub(sectionEl, "Spinning…");
+
+          st.spinning = true;
+          wheelState.set(sectionEl, st);
+
+          const start = st.angle;
+          const baseTarget = angleForIndexAtPointer(targetIdx, n);
+
+          // Ensure many full rotations then land exactly on target
+          const extraTurns = 6 + randInt(4); // 6..9
+          const end = baseTarget + extraTurns * TAU;
+          const duration = 1550 + randInt(650); // 1.55s..2.2s
+          const t0 = performance.now();
+
+          const tick = (now) => {
+            const t = clamp((now - t0) / duration, 0, 1);
+            const eased = easeOutCubic(t);
+            st.angle = start + (end - start) * eased;
+            drawWheel(canvas, arr, st.angle);
+            setLegendActive(sectionEl, indexAtPointer(st.angle, n));
+            if (t < 1) {
+              st.raf = requestAnimationFrame(tick);
+              return;
+            }
+
+            st.spinning = false;
+            st.raf = null;
+            wheelState.set(sectionEl, st);
+            drawWheel(canvas, arr, st.angle);
+
+            const landedIdx = indexAtPointer(st.angle, n);
+            setPick(sectionEl, arr[landedIdx]);
+            setLegendActive(sectionEl, landedIdx);
+          setSub(sectionEl, "Locked in.");
+          setBusy(sectionEl, false);
+          };
+
+          st.raf = requestAnimationFrame(tick);
+        }
+
+        const sections = Array.from(document.querySelectorAll("section.card[data-spinner]"));
+
+        for (const s of sections) {
+          const key = s.getAttribute("data-spinner");
+          if (!key || !DATA[key]) continue;
+          if (key === "behavioral") initWheel(s, key);
+          else initSlot(s, key);
+        }
+
+        document.addEventListener("click", (e) => {
+          const btn = e.target.closest?.('button[data-action="spin"]');
+          if (!btn) return;
+          const sectionEl = btn.closest("section.card");
+          const key = sectionEl?.getAttribute("data-spinner");
+          if (!sectionEl || !key) return;
+          if (key === "behavioral") spinWheel(sectionEl, key);
+          else spinSlot(sectionEl, key);
+        });
+
+        document.addEventListener("keydown", (e) => {
+          if (e.repeat) return;
+          const k = e.key.toLowerCase();
+          if (k === "1") return spinSlot(sections.find(s => s.getAttribute("data-spinner") === "leetcode"), "leetcode");
+          if (k === "2") return spinSlot(sections.find(s => s.getAttribute("data-spinner") === "system"), "system");
+          if (k === "3") return spinWheel(sections.find(s => s.getAttribute("data-spinner") === "behavioral"), "behavioral");
+          if (k === "a") {
+            const order = ["leetcode", "system", "behavioral"];
+            for (const key of order) {
+              const s = sections.find((x) => x.getAttribute("data-spinner") === key);
+              if (!s) continue;
+              if (key === "behavioral") spinWheel(s, key);
+              else spinSlot(s, key);
+            }
+          }
+        });
+
+        // Redraw on resize for crisp text
+        let resizeT = null;
+        window.addEventListener("resize", () => {
+          if (resizeT) window.clearTimeout(resizeT);
+          resizeT = window.setTimeout(() => {
+            for (const s of sections) {
+              const key = s.getAttribute("data-spinner");
+              if (!key || !DATA[key]) continue;
+              if (key === "behavioral") {
+                const canvas = s.querySelector('canvas[data-role="wheel"]');
+                const st = wheelState.get(s);
+                if (canvas && st) drawWheel(canvas, DATA[key], st.angle);
+              } else {
+                const st = slotState.get(s);
+                if (!st) continue;
+                // Recompute row height and keep current item centered
+                st.rowH = getSlotRowHeight(s);
+                const viewportH = s.querySelector(".slot-viewport")?.getBoundingClientRect().height || 156;
+                const centerY = viewportH / 2 - st.rowH / 2;
+                const rowIndex = st.startRowIndex ?? (DATA[key].length * 6 + st.index);
+                st.offsetY = centerY - rowIndex * st.rowH;
+                slotState.set(s, st);
+                setSlotTransform(s, st.offsetY);
+              }
+            }
+          }, 80);
+        });
+      })();
+    </script>
+  </body>
+</html>
