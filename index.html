@@ -568,7 +568,14 @@
                   <div class="slot-reel" data-role="slotReel"></div>
                 </div>
               </div>
-              <div class="pick" data-role="pick">—</div>
+              <a
+                class="pick pick-link"
+                data-role="pick"
+                href="https://leetcode.com/tag/system-design/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open LeetCode System Design"
+              >—</a>
               <div class="sub" data-role="sub">Hit Spin to scroll fast and land.</div>
             </div>
           </div>
@@ -704,6 +711,12 @@
           return `https://leetcode.com/problemset/`;
         }
 
+        function leetCodeUrlForSystemDesignTopic(topic) {
+          // LeetCode doesn't have stable per-topic system design pages,
+          // so we send you to their problemset search with the topic query.
+          return `https://leetcode.com/problemset/all/?search=${encodeURIComponent(topic)}`;
+        }
+
         function setPick(sectionEl, value) {
           const pickEl = sectionEl.querySelector('[data-role="pick"]');
           if (!pickEl) return;
@@ -713,6 +726,10 @@
           if (key === "leetcode" && pickEl.tagName === "A") {
             pickEl.href = leetCodeUrlForCategory(value);
             pickEl.setAttribute("aria-label", `Open LeetCode tag for ${value}`);
+          }
+          if (key === "system" && pickEl.tagName === "A") {
+            pickEl.href = leetCodeUrlForSystemDesignTopic(value);
+            pickEl.setAttribute("aria-label", `Search LeetCode for ${value}`);
           }
         }
 
