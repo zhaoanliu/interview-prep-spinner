@@ -558,7 +558,7 @@
             </div>
 
             <div class="pill" aria-hidden="true">
-              Picks from <b>10</b> topics
+              Picks from <b>25</b> topics
             </div>
 
             <div class="window">
@@ -571,10 +571,10 @@
               <a
                 class="pick pick-link"
                 data-role="pick"
-                href="https://leetcode.com/tag/system-design/"
+                href="https://bytebytego.com/courses/system-design-interview"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Open LeetCode System Design"
+                aria-label="Open System Design resource"
               >—</a>
               <div class="sub" data-role="sub">Hit Spin to scroll fast and land.</div>
             </div>
@@ -645,16 +645,31 @@
             "Intervals",
           ],
           system: [
-            "URL Shortener",
             "Rate Limiter",
-            "Distributed Cache",
+            "Consistent Hashing",
+            "Key-value Store",
+            "Unique ID Generator",
+            "URL Shortener",
+            "Web Crawler",
             "Notification System",
-            "News Feed",
+            "News Feed System",
+            "Chat System",
             "Search Autocomplete",
+            "YouTube",
+            "Google Drive",
+            "Proximity Service",
+            "Nearby Friends",
+            "Google Maps",
             "Distributed Message Queue",
-            "Object Storage",
-            "Video Streaming",
+            "Metrics Monitoring & Alerting",
+            "Ad Click Event Aggregation",
+            "Hotel Reservation System",
+            "Distributed Email Service",
+            "S3-like Object Storage",
+            "Real-time Gaming Leaderboard",
             "Payment System",
+            "Digital Wallet",
+            "Stock Exchange",
           ],
           behavioral: [
             "Tell me about a conflict with a teammate",
@@ -711,11 +726,33 @@
           return `https://leetcode.com/problemset/`;
         }
 
-        function leetCodeUrlForSystemDesignTopic(topic) {
-          // LeetCode doesn't have stable per-topic system design pages,
-          // so we send you to their problemset search with the topic query.
-          return `https://leetcode.com/problemset/all/?search=${encodeURIComponent(topic)}`;
-        }
+        const SYSTEM_TOPIC_LINK = {
+          "Rate Limiter": "https://bytebytego.com/courses/system-design-interview/design-a-rate-limiter",
+          "Consistent Hashing": "https://bytebytego.com/courses/system-design-interview/design-consistent-hashing",
+          "Key-value Store": "https://bytebytego.com/courses/system-design-interview/design-a-key-value-store",
+          "Unique ID Generator": "https://bytebytego.com/courses/system-design-interview/design-a-unique-id-generator-in-distributed-systems",
+          "URL Shortener": "https://bytebytego.com/courses/system-design-interview/design-a-url-shortener",
+          "Web Crawler": "https://bytebytego.com/courses/system-design-interview/design-a-web-crawler",
+          "Notification System": "https://bytebytego.com/courses/system-design-interview/design-a-notification-system",
+          "News Feed System": "https://bytebytego.com/courses/system-design-interview/design-a-news-feed-system",
+          "Chat System": "https://bytebytego.com/courses/system-design-interview/design-a-chat-system",
+          "Search Autocomplete": "https://bytebytego.com/courses/system-design-interview/design-a-search-autocomplete-system",
+          "YouTube": "https://bytebytego.com/courses/system-design-interview/design-youtube",
+          "Google Drive": "https://bytebytego.com/courses/system-design-interview/design-google-drive",
+          "Proximity Service": "https://bytebytego.com/courses/system-design-interview/proximity-service",
+          "Nearby Friends": "https://bytebytego.com/courses/system-design-interview/nearby-friends",
+          "Google Maps": "https://bytebytego.com/courses/system-design-interview/google-maps",
+          "Distributed Message Queue": "https://bytebytego.com/courses/system-design-interview/distributed-message-queue",
+          "Metrics Monitoring & Alerting": "https://bytebytego.com/courses/system-design-interview/metrics-monitoring-and-alerting-system",
+          "Ad Click Event Aggregation": "https://bytebytego.com/courses/system-design-interview/ad-click-event-aggregation",
+          "Hotel Reservation System": "https://bytebytego.com/courses/system-design-interview/hotel-reservation-system",
+          "Distributed Email Service": "https://bytebytego.com/courses/system-design-interview/distributed-email-service",
+          "S3-like Object Storage": "https://bytebytego.com/courses/system-design-interview/s3-like-object-storage",
+          "Real-time Gaming Leaderboard": "https://bytebytego.com/courses/system-design-interview/real-time-gaming-leaderboard",
+          "Payment System": "https://bytebytego.com/courses/system-design-interview/payment-system",
+          "Digital Wallet": "https://bytebytego.com/courses/system-design-interview/digital-wallet",
+          "Stock Exchange": "https://bytebytego.com/courses/system-design-interview/stock-exchange",
+        };
 
         function setPick(sectionEl, value) {
           const pickEl = sectionEl.querySelector('[data-role="pick"]');
@@ -728,8 +765,10 @@
             pickEl.setAttribute("aria-label", `Open LeetCode tag for ${value}`);
           }
           if (key === "system" && pickEl.tagName === "A") {
-            pickEl.href = leetCodeUrlForSystemDesignTopic(value);
-            pickEl.setAttribute("aria-label", `Search LeetCode for ${value}`);
+            const url =
+              SYSTEM_TOPIC_LINK[value] || "https://bytebytego.com/courses/system-design-interview";
+            pickEl.href = url;
+            pickEl.setAttribute("aria-label", `Open ${value} chapter (opens in new tab)`);
           }
         }
 
