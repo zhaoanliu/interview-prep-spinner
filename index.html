@@ -67,6 +67,39 @@
         font-size: 14px;
       }
 
+      .shortcuts {
+        margin-top: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .shortcut-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.70);
+        font-size: 12px;
+        user-select: none;
+        line-height: 1;
+      }
+
+      .shortcut-key {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+          monospace;
+        font-size: 11px;
+        padding: 3px 7px;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.22);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: rgba(255, 255, 255, 0.78);
+      }
+
       .badge {
         display: inline-flex;
         align-items: center;
@@ -501,6 +534,12 @@
         <div class="title">
           <h1>Daily Interview Prep Spinner</h1>
           <p>Three quick spins. One focused plan for today.</p>
+          <div class="shortcuts" aria-label="Keyboard shortcuts">
+            <span class="shortcut-pill"><span class="shortcut-key">1</span> LeetCode</span>
+            <span class="shortcut-pill"><span class="shortcut-key">2</span> System Design</span>
+            <span class="shortcut-pill"><span class="shortcut-key">3</span> Behavioral</span>
+            <span class="shortcut-pill"><span class="shortcut-key">A</span> Spin All</span>
+          </div>
         </div>
         <div class="badge" id="todayBadge" title="Local time">
           <span class="dot" aria-hidden="true"></span>
@@ -614,14 +653,7 @@
         </section>
       </main>
 
-      <div class="footer">
-        <div>
-          Tip: press <span class="kbd">1</span> / <span class="kbd">2</span> / <span class="kbd">3</span> to spin each card.
-        </div>
-        <div>
-          Press <span class="kbd">A</span> to spin all.
-        </div>
-      </div>
+      <div class="footer"></div>
     </div>
 
     <script>
